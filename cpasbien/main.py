@@ -18,8 +18,8 @@ log = CPLog(__name__)
 class cpasbien(TorrentProvider, MovieProvider):
 
     urls = {
-        'test': 'http://www.cpasbien.cm/',
-        'search': 'http://www.cpasbien.cm/recherche/',
+        'test': 'https://wvw.cpasbien.ph/',
+        'search': 'https://wvw.cpasbien.ph/recherche/',
     }
 
     http_time_between_calls = 1 #seconds
@@ -45,13 +45,13 @@ class cpasbien(TorrentProvider, MovieProvider):
 
         TitleStringReal = (getTitle(movie['info']) + ' ' + simplifyString(quality['identifier'] )).replace('-',' ').replace(' ',' ').replace(' ',' ').replace(' ',' ').encode("utf8")
         
-        URL = (self.urls['search']).encode('UTF8')
+        URL = (self.urls['search']+TitleStringReal).encode('UTF8')
         URL=unicodedata.normalize('NFD',unicode(URL,"utf8","replace"))
         URL=URL.encode('ascii','ignore')
         URL = urllib2.quote(URL.encode('utf8'), ":/?=")
         
         values = {
-          'champ_recherche' : TitleStringReal
+          # 'champ_recherche' : TitleStringReal
         }
 
         data_tmp = urllib.urlencode(values)
@@ -92,7 +92,7 @@ class cpasbien(TorrentProvider, MovieProvider):
                             continue
                         detail_url = result.find("a")['href']
                         tmp = detail_url.split('/')[-1].replace('.html','.torrent')
-                        url_download = ('http://www.cpasbien.cm/telechargement/%s' % tmp)
+                        url_download = ('http://www.cpasbien.ph/get_torrent/%s' % tmp)
                         size = result.findAll(attrs = {'class' : ["poid"]})[0].text.replace(u'\xa0', u' ')
                         seeder = result.findAll(attrs = {'class' : ["seed_ok"]})[0].text
                         leecher = result.findAll(attrs = {'class' : ["down"]})[0].text
@@ -183,7 +183,7 @@ class cpasbien(TorrentProvider, MovieProvider):
         ]
 
         try:
-            response = opener.open('http://www.cpasbien.cm', tryUrlencode({'url': '/'}))
+            response = opener.open('http://www.cpasbien.ph', tryUrlencode({'url': '/'}))
         except urllib2.URLError as e:
             log.error('Login to cPASbien failed: %s' % e)
             return False
